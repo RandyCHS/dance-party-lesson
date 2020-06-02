@@ -57,11 +57,17 @@ b b b b b b b b b b b b b b b b
 b b b b b b b b b b b b b b b b 
 `
 }
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    steve.setPosition(60, 100)
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    game.reset()
+})
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     steve.setPosition(30, 100)
 })
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    steve.setPosition(100, 100)
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    steve.setPosition(130, 100)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
     otherSprite.destroy(effects.disintegrate, 100)
@@ -77,19 +83,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, ot
         info.changeLifeBy(1)
     }
 })
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    steve.setPosition(100, 100)
+})
+info.onLifeZero(function () {
+    game.over(false, effects.splatter)
+})
 scene.onHitWall(SpriteKind.Projectile, function (sprite) {
     sprite.destroy(effects.fire, 100)
     info.changeLifeBy(-1)
     streak = 0
-})
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    steve.setPosition(130, 100)
-})
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    steve.setPosition(60, 100)
-})
-info.onLifeZero(function () {
-    game.over(false, effects.splatter)
 })
 let right: Sprite = null
 let down: Sprite = null
@@ -142,7 +145,7 @@ game.onUpdateInterval(2000, function () {
     speed += 1
 })
 game.onUpdateInterval(500, function () {
-    lane = Math.randomRange(1, 4)
+    lane = randint(1, 4)
     if (lane == 1) {
         left = sprites.create(img`
 . . . . . . . . . . . . . . . . 

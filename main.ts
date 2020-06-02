@@ -67,10 +67,20 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, ot
     otherSprite.destroy(effects.disintegrate, 100)
     music.setVolume(10)
     info.changeScoreBy(1)
+    if (info.score() > 10) {
+        game.over(true, effects.smiles)
+    }
+    streak += 1
+    if (streak > 4) {
+        info.changeLifeBy(2)
+    } else if (streak > 2) {
+        info.changeLifeBy(1)
+    }
 })
 scene.onHitWall(SpriteKind.Projectile, function (sprite) {
     sprite.destroy(effects.fire, 100)
     info.changeLifeBy(-1)
+    streak = 0
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     steve.setPosition(130, 100)
@@ -79,13 +89,14 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     steve.setPosition(60, 100)
 })
 info.onLifeZero(function () {
-    game.over(true, effects.confetti)
+    game.over(false, effects.splatter)
 })
 let right: Sprite = null
 let down: Sprite = null
 let up: Sprite = null
 let left: Sprite = null
 let lane = 0
+let streak = 0
 let steve: Sprite = null
 scene.setBackgroundColor(11)
 effects.starField.startScreenEffect()
@@ -124,8 +135,9 @@ steve = sprites.create(img`
 `, SpriteKind.Player)
 steve.setPosition(80, 100)
 info.setScore(0)
+streak = 0
 info.setLife(5)
-let speed = 40
+let speed = 20
 game.onUpdateInterval(2000, function () {
     speed += 1
 })
